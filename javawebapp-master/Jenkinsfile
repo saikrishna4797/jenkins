@@ -3,13 +3,13 @@ pipeline {
 
     tools {
         // Install the Maven version configured as "M3" and add it to the path.
-        maven "Maven3.9"
+        maven "Maven"
     }
 
     stages {
         stage('checkout') {
             steps {
-                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/keyspaceits/javawebapp.git']])
+               checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/prasadrendla/jenkins.git']])
             }
         }
         stage('build') {
@@ -20,7 +20,7 @@ pipeline {
         }
         stage('build-notify') {
             steps {
-                slackSend channel: 'opsteam', message: 'build success', teamDomain: 'creativeworks-corp', tokenCredentialId: 'slack'
+               slackSend channel: 'devops', message: 'success', tokenCredentialId: 'slack-note'
             }
         }
         stage('CodeQuality') {
@@ -37,12 +37,12 @@ pipeline {
         }
         stage('Deploy to QA') {
             steps {
-                deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '', url: 'http://34.234.40.136:8080')], contextPath: null, war: '**/*.war'
+              deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '', url: 'http://54.226.53.34:8080/')], contextPath: null, war: '**/*'
             }
         }
         stage('Deploy-notify') {
             steps {
-                slackSend channel: 'opsteam', message: 'Deployment To QA Success', teamDomain: 'creativeworks-corp', tokenCredentialId: 'slack'
+               slackSend channel: 'devops', message: 'success', tokenCredentialId: 'slack-note'
             }
         }
         stage('Deploy to Prod Approve') {
@@ -55,7 +55,7 @@ pipeline {
         }
         stage('Deploy to Prod') {
             steps {
-                deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '', url: 'http://34.234.40.136:8080')], contextPath: null, war: '**/*.war'
+                deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '', url: 'http://54.226.53.34:8080/')], contextPath: null, war: '**/*'
             }
         }
     }
