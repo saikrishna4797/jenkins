@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('checkout') {
             steps {
-              checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/prasadrendla/jenkins.git']])
+               checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/saikrishna4797/jenkins.git']])
             }
         }
         stage('build') {
@@ -20,7 +20,7 @@ pipeline {
         }
         stage('build-notify') {
             steps {
-               slackSend channel: 'devops', message: 'success', tokenCredentialId: 'slack-note'
+              slackSend channel: 'creativeworks-org', color: 'yellow', message: 'successful', tokenCredentialId: 'slack'
             }
         }
         stage('CodeQuality') {
@@ -37,12 +37,12 @@ pipeline {
         }
         stage('Deploy to QA') {
             steps {
-              deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '', url: 'http://54.226.53.34:8080/')], contextPath: null, war: '**/*'
+              deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '', url: 'http://20.211.103.97:8080/')], contextPath: null, war: '**/*.war'
             }
         }
         stage('Deploy-notify') {
             steps {
-               slackSend channel: 'devops', message: 'success', tokenCredentialId: 'slack-note'
+              slackSend channel: 'creativeworks-org', color: 'yellow', message: 'successful', tokenCredentialId: 'slack'
             }
         }
         stage('Deploy to Prod Approve') {
